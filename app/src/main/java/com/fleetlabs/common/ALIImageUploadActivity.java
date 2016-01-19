@@ -13,19 +13,14 @@ import com.alibaba.sdk.android.oss.ClientConfiguration;
 import com.alibaba.sdk.android.oss.ClientException;
 import com.alibaba.sdk.android.oss.OSS;
 import com.alibaba.sdk.android.oss.OSSClient;
-import com.alibaba.sdk.android.oss.ServiceException;
 import com.alibaba.sdk.android.oss.common.OSSLog;
 import com.alibaba.sdk.android.oss.common.auth.OSSCredentialProvider;
 import com.alibaba.sdk.android.oss.common.auth.OSSPlainTextAKSKCredentialProvider;
-import com.alibaba.sdk.android.oss.model.PutObjectRequest;
-import com.alibaba.sdk.android.oss.model.PutObjectResult;
-import com.fleetlabs.library.image.AliCallback;
-import com.fleetlabs.library.image.ImageUpload;
+import com.fleetlabs.library.upload.UploadCallback;
+import com.fleetlabs.library.upload.UploaderManager;
 import com.fleetlabs.library.utils.ImageUtil;
 
 public class AliImageUploadActivity extends AppCompatActivity implements View.OnClickListener {
-
-    public static final String TAG = "AliImageUploadActivity";
 
     private Context mContext;
     private Button btnMultipartUpload;
@@ -69,21 +64,20 @@ public class AliImageUploadActivity extends AppCompatActivity implements View.On
 
         switch (v.getId()) {
             case R.id.btnSimpleUpload:
-                ImageUpload.withAli(this).init(endpoint, accessKeyId, accessKeySecret, bucket).uploadWithCallback(uploadFilePath, fileName, new AliCallback() {
+                UploaderManager.getInstance().upload(uploadFilePath, fileName, bucket, new UploadCallback() {
                     @Override
-                    public void onSuccess(PutObjectRequest putObjectRequest, PutObjectResult putObjectResult) {
-                        super.onSuccess(putObjectRequest, putObjectResult);
-                        Log.i(TAG, "onSuccess");
+                    public void onSuccess() {
+                        Log.i("TAG", "onSuccess");
                     }
 
                     @Override
-                    public void onFailure(PutObjectRequest putObjectRequest, ClientException e, ServiceException e1) {
-                        Log.i(TAG, "onFailure");
+                    public void onFailure(Exception exc) {
+                        Log.i("TAG", "onFailure");
                     }
 
                     @Override
-                    public void onProgress(PutObjectRequest putObjectRequest, long currentSize, long totalSize) {
-                        Log.i(TAG, "currentSize:" + currentSize + "totalSize:" + totalSize + "百分比:" + currentSize * 100f / totalSize + "%");
+                    public void onProgress(long currentSize, long totalSize) {
+                        Log.i("TAG", "onProgress" + "==currentSize==" + currentSize + "==totalSize==" + 100f * currentSize / totalSize + "%");
                     }
                 });
                 break;
@@ -106,7 +100,17 @@ public class AliImageUploadActivity extends AppCompatActivity implements View.On
             case R.id.btnMultipartUpload:
                 uploadFilePath = Environment.getExternalStorageDirectory().toString() + "/2.jpg";
                 fileName = "22.png";
-                ImageUpload.withAli(mContext).init(endpoint, accessKeyId, accessKeySecret, bucket).upload(uploadFilePath, fileName);
+                UploaderManager.getInstance().upload(uploadFilePath, fileName, bucket, new UploadCallback() {
+                    @Override
+                    public void onSuccess() {
+
+                    }
+
+                    @Override
+                    public void onFailure(Exception exc) {
+
+                    }
+                });
                 break;
             case R.id.btnMultipart:
                 OSSCredentialProvider credentialProvider2 = new OSSPlainTextAKSKCredentialProvider(accessKeyId, accessKeySecret);
