@@ -16,6 +16,7 @@ import com.alibaba.sdk.android.oss.model.DeleteObjectResult;
 import com.alibaba.sdk.android.oss.model.ObjectMetadata;
 import com.alibaba.sdk.android.oss.model.PutObjectRequest;
 import com.alibaba.sdk.android.oss.model.PutObjectResult;
+import com.fleetlabs.library.image.AliCallback;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -30,12 +31,21 @@ public class PutObjectSamples {
     private String testBucket;
     private String testObject;
     private String uploadFilePath;
+    private AliCallback aliImageCallback;
 
     public PutObjectSamples(OSS client, String testBucket, String testObject, String uploadFilePath) {
         this.oss = client;
         this.testBucket = testBucket;
         this.testObject = testObject;
         this.uploadFilePath = uploadFilePath;
+    }
+
+    public PutObjectSamples(OSS client, String testBucket, String testObject, String uploadFilePath, AliCallback aliImageCallback) {
+        this.oss = client;
+        this.testBucket = testBucket;
+        this.testObject = testObject;
+        this.uploadFilePath = uploadFilePath;
+        this.aliImageCallback = aliImageCallback;
     }
 
     // 从本地文件上传，采用阻塞的同步接口
@@ -68,38 +78,9 @@ public class PutObjectSamples {
         PutObjectRequest put = new PutObjectRequest(testBucket, testObject, uploadFilePath);
 
         // 异步上传时可以设置进度回调
-        put.setProgressCallback(new OSSProgressCallback<PutObjectRequest>() {
-            @Override
-            public void onProgress(PutObjectRequest request, long currentSize, long totalSize) {
-                Log.d("PutObject", "currentSize: " + currentSize + " totalSize: " + totalSize);
-            }
-        });
+        put.setProgressCallback(aliImageCallback);
 
-        OSSAsyncTask task = oss.asyncPutObject(put, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
-            @Override
-            public void onSuccess(PutObjectRequest request, PutObjectResult result) {
-                Log.d("PutObject", "UploadSuccess");
-
-                Log.d("ETag", result.getETag());
-                Log.d("RequestId", result.getRequestId());
-            }
-
-            @Override
-            public void onFailure(PutObjectRequest request, ClientException clientExcepion, ServiceException serviceException) {
-                // 请求异常
-                if (clientExcepion != null) {
-                    // 本地异常如网络异常等
-                    clientExcepion.printStackTrace();
-                }
-                if (serviceException != null) {
-                    // 服务异常
-                    Log.e("ErrorCode", serviceException.getErrorCode());
-                    Log.e("RequestId", serviceException.getRequestId());
-                    Log.e("HostId", serviceException.getHostId());
-                    Log.e("RawMessage", serviceException.getRawMessage());
-                }
-            }
-        });
+        OSSAsyncTask task = oss.asyncPutObject(put, aliImageCallback);
     }
 
     // 直接上传二进制数据，使用阻塞的同步接口
@@ -286,11 +267,9 @@ public class PutObjectSamples {
         try {
             DeleteObjectRequest delete = new DeleteObjectRequest(testBucket, testObject);
             DeleteObjectResult result = oss.deleteObject(delete);
-        }
-        catch (ClientException clientException) {
+        } catch (ClientException clientException) {
             clientException.printStackTrace();
-        }
-        catch (ServiceException serviceException) {
+        } catch (ServiceException serviceException) {
             Log.e("ErrorCode", serviceException.getErrorCode());
             Log.e("RequestId", serviceException.getRequestId());
             Log.e("HostId", serviceException.getHostId());

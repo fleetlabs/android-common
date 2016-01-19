@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnAliUpload:
-                Intent intent = new Intent(this, ALIImageUploadActivity.class);
+                Intent intent = new Intent(this, AliImageUploadActivity.class);
                 startActivity(intent);
                 break;
         }

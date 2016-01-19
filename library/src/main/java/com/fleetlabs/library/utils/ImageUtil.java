@@ -11,7 +11,7 @@ import com.bumptech.glide.Glide;
 /**
  * Created by Aaron.Wu on 2016/1/18.
  */
-public class ImageLoadUtil {
+public class ImageUtil {
 
     public static void load(Context mContext, String url, ImageView view) {
         if (!StringUtil.isEmpty(url)) {

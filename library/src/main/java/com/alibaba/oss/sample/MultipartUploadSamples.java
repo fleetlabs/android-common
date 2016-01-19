@@ -57,7 +57,7 @@ public class MultipartUploadSamples {
         long uploadedLength = 0;
         List<PartETag> partETags = new ArrayList<PartETag>();
         while (uploadedLength < fileLength) {
-            int partLength = (int)Math.min(partSize, fileLength - uploadedLength);
+            int partLength = (int) Math.min(partSize, fileLength - uploadedLength);
             byte[] partData = IOUtils.readStreamAsBytesArray(input, partLength);
 
             UploadPartRequest uploadPart = new UploadPartRequest(testBucket, testObject, uploadId, currentIndex);
