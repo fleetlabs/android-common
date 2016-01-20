@@ -29,5 +29,8 @@ dependencies {
     apt "org.androidannotations:androidannotations:$AAVersion"
     compile "org.androidannotations:androidannotations-api:$AAVersion"
     compile 'com.github.bumptech.glide:glide:3.6.1'
-    provided group: 'com.aliyun.dpa', name: 'oss-android-sdk', version: '2.0.3'
+    compile group: 'com.aliyun.dpa', name: 'oss-android-sdk', version: '2.0.3'
+    compile group: 'com.qiniu', name: 'qiniu-android-sdk', version: '(7.0.1,7.1)'
+    compile 'com.squareup.okhttp:okhttp:2.4.0'
+    compile 'com.google.code.gson:gson:2.5'
 }

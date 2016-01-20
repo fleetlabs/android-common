@@ -23,9 +23,11 @@ import java.util.HashMap;
 public class AliUploader implements Uploader {
 
     private OSS oss;
+    private String endpoint;
 
     @Override
     public void init(Context context, HashMap<String, String> config) {
+        endpoint = config.get("endpoint");
         OSSCredentialProvider credentialProvider = new OSSPlainTextAKSKCredentialProvider(
                 config.get("accessKeyId"), config.get("accessKeySecret"));
         ClientConfiguration conf = new ClientConfiguration();
@@ -34,7 +36,7 @@ public class AliUploader implements Uploader {
         conf.setMaxConcurrentRequest(5); // 最大并发请求书，默认5个
         conf.setMaxErrorRetry(2); // 失败后最大重试次数，默认2次
         OSSLog.enableLog();
-        oss = new OSSClient(context, config.get("endpoint"), credentialProvider, conf);
+        oss = new OSSClient(context, endpoint, credentialProvider, conf);
     }
 
     @Override
@@ -48,7 +50,7 @@ public class AliUploader implements Uploader {
 
             @Override
             public void onProgress(PutObjectRequest putObjectRequest, long l, long l1) {
-                callback.onProgress(l, l1);
+                callback.onProgress(l / l1);
             }
         });
 
@@ -56,7 +58,7 @@ public class AliUploader implements Uploader {
 
             @Override
             public void onSuccess(PutObjectRequest putObjectRequest, PutObjectResult putObjectResult) {
-                callback.onSuccess();
+                callback.onSuccess(endpoint + "/" + name);
             }
 
             @Override

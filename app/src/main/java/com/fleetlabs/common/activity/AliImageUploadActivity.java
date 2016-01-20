@@ -1,4 +1,4 @@
-package com.fleetlabs.common;
+package com.fleetlabs.common.activity;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -16,6 +16,7 @@ import com.alibaba.sdk.android.oss.OSSClient;
 import com.alibaba.sdk.android.oss.common.OSSLog;
 import com.alibaba.sdk.android.oss.common.auth.OSSCredentialProvider;
 import com.alibaba.sdk.android.oss.common.auth.OSSPlainTextAKSKCredentialProvider;
+import com.fleetlabs.common.R;
 import com.fleetlabs.library.upload.UploadCallback;
 import com.fleetlabs.library.upload.UploaderManager;
 import com.fleetlabs.library.utils.ImageUtil;
@@ -66,8 +67,8 @@ public class AliImageUploadActivity extends AppCompatActivity implements View.On
             case R.id.btnSimpleUpload:
                 UploaderManager.getInstance().upload(uploadFilePath, fileName, bucket, new UploadCallback() {
                     @Override
-                    public void onSuccess() {
-                        Log.i("TAG", "onSuccess");
+                    public void onSuccess(String url) {
+                        Log.i("TAG", "onSuccess" + url);
                     }
 
                     @Override
@@ -76,8 +77,8 @@ public class AliImageUploadActivity extends AppCompatActivity implements View.On
                     }
 
                     @Override
-                    public void onProgress(long currentSize, long totalSize) {
-                        Log.i("TAG", "onProgress" + "==currentSize==" + currentSize + "==totalSize==" + 100f * currentSize / totalSize + "%");
+                    public void onProgress(double percent) {
+                        Log.i("TAG", "onProgress" + percent + "%");
                     }
                 });
                 break;
@@ -102,7 +103,7 @@ public class AliImageUploadActivity extends AppCompatActivity implements View.On
                 fileName = "22.png";
                 UploaderManager.getInstance().upload(uploadFilePath, fileName, bucket, new UploadCallback() {
                     @Override
-                    public void onSuccess() {
+                    public void onSuccess(String url) {
 
                     }
 

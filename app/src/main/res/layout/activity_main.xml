@@ -11,4 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="ALI IMAGE UPLOAD ACTIVITY" />
+    <Button
+        android:id="@+id/btnQiNiuUpload"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="QiNiu IMAGE UPLOAD ACTIVITY" />
 </LinearLayout>
