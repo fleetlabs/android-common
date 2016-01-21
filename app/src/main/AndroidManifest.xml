@@ -19,6 +19,8 @@
         <activity android:name=".activity.AliImageUploadActivity" />
         <activity android:name=".activity.QiNiuUploadActivity" >
         </activity>
+        <activity android:name=".activity.MultipartUploadActivity" >
+        </activity>
     </application>
 
 </manifest>

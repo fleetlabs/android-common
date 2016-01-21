@@ -12,6 +12,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private Button btnAliUpload;
     private Button btnQiNiuUpload;
+    private Button btnMultipartUpload;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,8 +20,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         btnAliUpload = (Button) findViewById(R.id.btnAliUpload);
         btnQiNiuUpload = (Button) findViewById(R.id.btnQiNiuUpload);
+        btnMultipartUpload = (Button) findViewById(R.id.btnMultipartUpload);
         btnAliUpload.setOnClickListener(this);
         btnQiNiuUpload.setOnClickListener(this);
+        btnMultipartUpload.setOnClickListener(this);
 
     }
 
@@ -34,6 +37,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btnQiNiuUpload:
                 Intent intentQiNiu = new Intent(this, QiNiuUploadActivity.class);
                 startActivity(intentQiNiu);
+                break;
+            case R.id.btnMultipartUpload:
+                Intent multipartUploadIntent = new Intent(this, MultipartUploadActivity.class);
+                startActivity(multipartUploadIntent);
                 break;
         }
     }

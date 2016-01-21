@@ -4,23 +4,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context="com.fleetlabs.common.activity.MultipartUploadActivity">
 
     <Button
-        android:id="@+id/btnAliUpload"
+        android:id="@+id/btnImagePickerCamera"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="ALI IMAGE UPLOAD ACTIVITY" />
+        android:text="IMAGE PICKER CAMERA" />
 
     <Button
-        android:id="@+id/btnQiNiuUpload"
+        android:id="@+id/btnImagePickerGallery"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="QiNiu IMAGE UPLOAD ACTIVITY" />
+        android:text="IMAGE PICKER GALLERY" />
 
-    <Button
-        android:id="@+id/btnMultipartUpload"
+    <ImageView
+        android:id="@+id/ivImage"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Multipart Upload ACTIVITY" />
+        android:layout_height="match_parent" />
 </LinearLayout>
