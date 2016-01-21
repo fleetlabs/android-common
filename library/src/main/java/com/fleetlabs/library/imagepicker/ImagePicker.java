@@ -79,5 +79,7 @@ public class ImagePicker {
                 mCallback.onSuccess(tempPath);
                 break;
         }
+        mActivity = null;
+        mCallback = null;
     }
 }
