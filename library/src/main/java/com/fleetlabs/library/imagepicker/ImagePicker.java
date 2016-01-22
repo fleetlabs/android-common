@@ -1,6 +1,7 @@
 package com.fleetlabs.library.imagepicker;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -19,6 +20,7 @@ public class ImagePicker {
     public static final int TAKE_PHOTO_RESULT_CODE = 0x002;
 
     private static Activity mActivity;
+    private static Fragment mFragment;
     private static ImagePickerCallback mCallback;
 
     public static void getImageFromCamera(Activity activity, ImagePickerCallback callback) {

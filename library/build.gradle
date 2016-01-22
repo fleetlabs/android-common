@@ -33,4 +33,5 @@ dependencies {
     compile group: 'com.qiniu', name: 'qiniu-android-sdk', version: '(7.0.1,7.1)'
     compile 'com.squareup.okhttp:okhttp:2.4.0'
     compile 'com.google.code.gson:gson:2.5'
+    compile 'com.squareup:tape:1.2.3'
 }

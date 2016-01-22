@@ -8,15 +8,24 @@
 
     <Button
         android:id="@+id/btnImagePickerCamera"
+        style="@style/buttonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="IMAGE PICKER CAMERA" />
 
     <Button
         android:id="@+id/btnImagePickerGallery"
+        style="@style/buttonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="IMAGE PICKER GALLERY" />
+
+    <Button
+        android:id="@+id/btnMultipartImageUpload"
+        style="@style/buttonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="IMAGE MULTIPART UPLOAD" />
 
     <ImageView
         android:id="@+id/ivImage"
