@@ -24,10 +24,12 @@ public class AliUploader implements Uploader {
 
     private OSS oss;
     private String endpoint;
+    private String bucket;
 
     @Override
     public void init(Context context, HashMap<String, String> config) {
         endpoint = config.get("endpoint");
+        bucket = config.get("bucket");
         OSSCredentialProvider credentialProvider = new OSSPlainTextAKSKCredentialProvider(
                 config.get("accessKeyId"), config.get("accessKeySecret"));
         ClientConfiguration conf = new ClientConfiguration();
@@ -40,7 +42,7 @@ public class AliUploader implements Uploader {
     }
 
     @Override
-    public void upload(final String path, final String name, final String bucket, final UploadCallback callback) {
+    public void upload(final String path, final String name, final UploadCallback callback) {
 
         // 构造上传请求
         PutObjectRequest put = new PutObjectRequest(bucket, name, path);

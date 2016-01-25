@@ -9,5 +9,5 @@ import java.util.HashMap;
  */
 public interface Uploader {
     void init(Context context, HashMap<String, String> config);
-    void upload(String path, String name, String bucket, UploadCallback callback);
+    void upload(String path, String name, UploadCallback callback);
 }

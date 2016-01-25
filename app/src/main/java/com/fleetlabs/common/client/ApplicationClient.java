@@ -24,6 +24,7 @@ public class ApplicationClient extends Application {
         config.put("endpoint", "http://oss-cn-shanghai.aliyuncs.com");
         config.put("accessKeyId", "LVDUaIkwk9ul7mL7");
         config.put("accessKeySecret", "l03usWb8e5LG96VXJXQi8PYYoxeLqN");
+        config.put("bucket", "kuitest");
         /*config.put("key_url", "http://115.231.183.102:9090/api/simple_upload/with_key_upload_token.php");*/
 
         UploaderManager.getInstance().initConfig(mContext, OSSType.Ali, config);

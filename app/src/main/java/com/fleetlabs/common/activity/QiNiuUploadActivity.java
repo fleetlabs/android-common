@@ -30,7 +30,7 @@ public class QiNiuUploadActivity extends AppCompatActivity implements View.OnCli
             case R.id.btnQNSimpleUpload:
                 String path = Environment.getExternalStorageDirectory().toString() + "/1.jpg";
 
-                UploaderManager.getInstance().upload(path, "123123123456456456123123123", "", new UploadCallback() {
+                UploaderManager.getInstance().upload(path, "123123123456456456123123123", new UploadCallback() {
                     @Override
                     public void onSuccess(String url) {
                         Log.i("TAG", "onSuccess:" + url);

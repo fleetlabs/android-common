@@ -16,27 +16,31 @@ public class ImageUploadTask implements Task<ImageUploadTask.Callback> {
 
     private String path;
     private String name;
-    private String bucket;
+    private UploadCallback mCallback;
 
-    public ImageUploadTask(String path, String name, String bucket) {
+    public ImageUploadTask(String path, String name, UploadCallback callback) {
         this.path = path;
         this.name = name;
-        this.bucket = bucket;
+        this.mCallback = callback;
     }
 
     @Override
     public void execute(final Callback callback) {
-        UploadCallback uploadCallback = new UploadCallback() {
+        UploaderManager.getInstance().upload(path, name, new UploadCallback() {
             @Override
             public void onSuccess(String url) {
                 callback.onSuccess(url);
             }
 
             @Override
+            public void onProgress(double percent) {
+                mCallback.onProgress(percent);
+            }
+
+            @Override
             public void onFailure(Exception exc) {
                 callback.onFailure();
             }
-        };
-        UploaderManager.getInstance().upload(path, name, bucket, uploadCallback);
+        });
     }
 }

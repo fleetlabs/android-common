@@ -13,8 +13,10 @@ import android.widget.ImageView;
 import com.fleetlabs.common.R;
 import com.fleetlabs.library.imagepicker.ImagePicker;
 import com.fleetlabs.library.imagepicker.ImagePickerCallback;
+import com.fleetlabs.library.upload.UploadCallback;
 import com.fleetlabs.library.upload.UploaderManager;
 import com.fleetlabs.library.upload.queue.ImageUploadTask;
+import com.fleetlabs.library.upload.queue.ImageUploadTaskQueue;
 import com.fleetlabs.library.utils.ImageUtil;
 
 import java.util.ArrayList;
@@ -99,17 +101,42 @@ public class MultipartUploadActivity extends AppCompatActivity implements View.O
                 });
                 break;
             case R.id.btnMultipartImageUpload:
-                UploaderManager.getInstance().uploadMultipart(pathList, nameList, "kuitest", new ImageUploadTask.Callback() {
+                /*UploaderManager.getInstance().uploadMultipart(pathList, nameList, "kuitest", new ImageUploadTask.Callback() {
                     @Override
                     public void onSuccess(String url) {
-                        Log.i("TAG", "onSuccess");
+                        Log.i("TAG", "onSuccess:" + url);
+                    }
+
+                    @Override
+                    public void onProgress(int total, int current, double percent) {
+                        Log.i("TAG", "onProgress:" + "total:" + total + ";current:" + current + ";percent:" + percent);
                     }
 
                     @Override
                     public void onFailure() {
-                        Log.i("TAG", "onFailure");
+                        Log.i("TAG", "onFailure:");
                     }
-                });
+                });*/
+
+                ImageUploadTaskQueue queue = UploaderManager.getInstance().createQueue();
+                for (int i = 0; i < pathList.size(); i++) {
+                    queue.add(new ImageUploadTask(pathList.get(i), nameList.get(i), new UploadCallback() {
+                        @Override
+                        public void onSuccess(String url) {
+                            Log.i("TAG", "onSuccess" + url);
+                        }
+
+                        @Override
+                        public void onProgress(double percent) {
+                            Log.i("TAG", "onProgress" + percent);
+                        }
+
+                        @Override
+                        public void onFailure(Exception exc) {
+                            Log.i("TAG", "onProgress");
+                        }
+                    }));
+                }
                 break;
         }
     }

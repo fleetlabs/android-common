@@ -65,7 +65,7 @@ public class AliImageUploadActivity extends AppCompatActivity implements View.On
 
         switch (v.getId()) {
             case R.id.btnSimpleUpload:
-                UploaderManager.getInstance().upload(uploadFilePath, fileName, bucket, new UploadCallback() {
+                UploaderManager.getInstance().upload(uploadFilePath, fileName, new UploadCallback() {
                     @Override
                     public void onSuccess(String url) {
                         Log.i("TAG", "onSuccess" + url);
@@ -101,7 +101,7 @@ public class AliImageUploadActivity extends AppCompatActivity implements View.On
             case R.id.btnMultipartUpload:
                 uploadFilePath = Environment.getExternalStorageDirectory().toString() + "/2.jpg";
                 fileName = "22.png";
-                UploaderManager.getInstance().upload(uploadFilePath, fileName, bucket, new UploadCallback() {
+                UploaderManager.getInstance().upload(uploadFilePath, fileName, new UploadCallback() {
                     @Override
                     public void onSuccess(String url) {
 

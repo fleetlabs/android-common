@@ -18,7 +18,6 @@ public class ImageQueueService extends Service implements ImageUploadTask.Callba
     @Override
     public void onCreate() {
         super.onCreate();
-        // Obtain TaskQueue here (e.g., through injection)
         queue = ImageUploadTaskQueue.create(this, new Gson());
     }
 

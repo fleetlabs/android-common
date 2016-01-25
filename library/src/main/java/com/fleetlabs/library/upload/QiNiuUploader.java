@@ -36,7 +36,7 @@ public class QiNiuUploader implements Uploader {
     }
 
     @Override
-    public void upload(final String path, final String name, String bucket, final UploadCallback callback) {
+    public void upload(final String path, final String name, final UploadCallback callback) {
         new Thread(new Runnable() {
             @Override
             public void run() {
