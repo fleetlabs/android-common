@@ -32,10 +32,6 @@ public class FileQueueService extends Service implements FileUploadTask.Callback
         return null;
     }
 
-    public void setQueue() {
-
-    }
-
     public void executeNext() {
         if (running) return; // Only one task at a time.
         FileUploadTask task = taskQueue.peek();
