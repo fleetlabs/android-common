@@ -5,20 +5,19 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
-import com.google.gson.Gson;
 import com.squareup.tape.TaskQueue;
 
 /**
  * Created by Aaron.Wu on 2016/1/22.
  */
-public class ImageQueueService extends Service implements ImageUploadTask.Callback {
-    private TaskQueue<ImageUploadTask> queue;
+public class FileQueueService extends Service implements FileUploadTask.Callback {
+    private static TaskQueue<FileUploadTask> taskQueue;
     private boolean running;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        queue = ImageUploadTaskQueue.create(this, new Gson());
+        //queue = FileUploadTaskQueue.create(this);
     }
 
     @Override
@@ -33,9 +32,13 @@ public class ImageQueueService extends Service implements ImageUploadTask.Callba
         return null;
     }
 
+    public void setQueue() {
+
+    }
+
     public void executeNext() {
         if (running) return; // Only one task at a time.
-        ImageUploadTask task = queue.peek();
+        FileUploadTask task = taskQueue.peek();
         if (task != null) {
             task.execute(this);
             running = true;
@@ -47,12 +50,16 @@ public class ImageQueueService extends Service implements ImageUploadTask.Callba
     @Override
     public void onSuccess(String url) {
         running = false;
-        queue.remove();
+        taskQueue.remove();
         executeNext();
     }
 
     @Override
     public void onFailure() {
 
+    }
+
+    public static void setQueue(FileUploadTaskQueue queue) {
+        taskQueue = queue;
     }
 }

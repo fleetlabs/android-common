@@ -2,8 +2,7 @@ package com.fleetlabs.library.upload;
 
 import android.content.Context;
 
-import com.fleetlabs.library.upload.queue.ImageUploadTaskQueue;
-import com.google.gson.Gson;
+import com.fleetlabs.library.upload.queue.FileUploadTaskQueue;
 
 import java.util.HashMap;
 
@@ -42,8 +41,8 @@ public class UploaderManager {
         uploader.upload(path, name, callback);
     }
 
-    public ImageUploadTaskQueue createQueue() {
-        ImageUploadTaskQueue queue = ImageUploadTaskQueue.create(mContext, new Gson());
+    public FileUploadTaskQueue createQueue() {
+        FileUploadTaskQueue queue = FileUploadTaskQueue.create(mContext);
         return queue;
     }
 

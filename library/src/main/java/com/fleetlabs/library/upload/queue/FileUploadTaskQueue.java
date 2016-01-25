@@ -12,12 +12,12 @@ import com.squareup.tape.TaskQueue;
 import java.io.File;
 import java.io.IOException;
 
-public class ImageUploadTaskQueue extends TaskQueue<ImageUploadTask> {
+public class FileUploadTaskQueue extends TaskQueue<FileUploadTask> {
     private static final String FILENAME = "image_upload_task_queue";
 
     private final Context context;
 
-    private ImageUploadTaskQueue(ObjectQueue<ImageUploadTask> delegate, Context context) {
+    private FileUploadTaskQueue(ObjectQueue<FileUploadTask> delegate, Context context) {
         super(delegate);
         this.context = context;
 
@@ -27,11 +27,13 @@ public class ImageUploadTaskQueue extends TaskQueue<ImageUploadTask> {
     }
 
     private void startService() {
-        context.startService(new Intent(context, ImageQueueService.class));
+        Intent intent = new Intent(context, FileQueueService.class);
+        context.startService(intent);
+        //FileQueueService.getInstance().executeNext();
     }
 
     @Override
-    public void add(ImageUploadTask entry) {
+    public void add(FileUploadTask entry) {
         super.add(entry);
         startService();
     }
@@ -41,15 +43,17 @@ public class ImageUploadTaskQueue extends TaskQueue<ImageUploadTask> {
         super.remove();
     }
 
-    public static ImageUploadTaskQueue create(Context context, Gson gson) {
-        FileObjectQueue.Converter<ImageUploadTask> converter = new GsonConverter<ImageUploadTask>(gson, ImageUploadTask.class);
+    public static FileUploadTaskQueue create(Context context) {
+        FileObjectQueue.Converter<FileUploadTask> converter = new GsonConverter<FileUploadTask>(new Gson(), FileUploadTask.class);
         File queueFile = new File(context.getFilesDir(), FILENAME);
-        FileObjectQueue<ImageUploadTask> delegate;
+        FileObjectQueue<FileUploadTask> delegate;
         try {
-            delegate = new FileObjectQueue<ImageUploadTask>(queueFile, converter);
+            delegate = new FileObjectQueue<FileUploadTask>(queueFile, converter);
         } catch (IOException e) {
             throw new RuntimeException("Unable to create file queue.", e);
         }
-        return new ImageUploadTaskQueue(delegate, context);
+        FileUploadTaskQueue queue = new FileUploadTaskQueue(delegate, context);
+        FileQueueService.setQueue(queue);
+        return queue;
     }
 }

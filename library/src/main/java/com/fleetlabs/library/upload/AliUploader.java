@@ -52,7 +52,7 @@ public class AliUploader implements Uploader {
 
             @Override
             public void onProgress(PutObjectRequest putObjectRequest, long l, long l1) {
-                callback.onProgress(l / l1);
+                callback.onProgress(l * 100d / l1);
             }
         });
 
@@ -65,7 +65,7 @@ public class AliUploader implements Uploader {
 
             @Override
             public void onFailure(PutObjectRequest putObjectRequest, ClientException e, ServiceException e1) {
-                callback.onFailure(e1);
+                callback.onFailure(e1 == null ? new Exception("上传失败") : e1);
             }
         });
     }
