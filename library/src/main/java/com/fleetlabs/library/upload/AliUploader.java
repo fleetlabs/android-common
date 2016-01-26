@@ -15,6 +15,7 @@ import com.alibaba.sdk.android.oss.common.auth.OSSPlainTextAKSKCredentialProvide
 import com.alibaba.sdk.android.oss.model.PutObjectRequest;
 import com.alibaba.sdk.android.oss.model.PutObjectResult;
 
+import java.net.URI;
 import java.util.HashMap;
 
 /**
@@ -42,9 +43,12 @@ public class AliUploader implements Uploader {
     }
 
     @Override
-    public void upload(final String path, final String name, final UploadCallback callback) {
-
+    public void upload(String path, final String name, HashMap<String, String> otherParameters, final UploadCallback callback) {
         // 构造上传请求
+        if(otherParameters != null && otherParameters.containsKey("bucket")) {
+            bucket = otherParameters.get("bucket");
+        }
+
         PutObjectRequest put = new PutObjectRequest(bucket, name, path);
 
         // 异步上传时可以设置进度回调
@@ -60,7 +64,7 @@ public class AliUploader implements Uploader {
 
             @Override
             public void onSuccess(PutObjectRequest putObjectRequest, PutObjectResult putObjectResult) {
-                callback.onSuccess(endpoint + "/" + name);
+                callback.onSuccess("http://" + bucket + "." + URI.create(endpoint).getHost() + "/" + name);
             }
 
             @Override

@@ -33,12 +33,24 @@ public class UploaderManager {
                 break;
             case QiNiu:
                 uploader = new QiNiuUploader();
+                break;
+            case Http:
+                uploader = new HttpUploader();
         }
         uploader.init(context, config);
     }
 
+    //Add Your custom Uploader
+    public void setUploader(Uploader uploader) {
+        this.uploader = uploader;
+    }
+
+    public void upload(String path, String name, HashMap<String, String> otherParameters, UploadCallback callback) {
+        uploader.upload(path, name, otherParameters, callback);
+    }
+
     public void upload(String path, String name, UploadCallback callback) {
-        uploader.upload(path, name, callback);
+        uploader.upload(path, name, null, callback);
     }
 
     public FileUploadTaskQueue createQueue() {

@@ -20,6 +20,7 @@ import com.fleetlabs.library.upload.queue.FileUploadTaskQueue;
 import com.fleetlabs.library.utils.ImageUtil;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class MultipartUploadActivity extends AppCompatActivity implements View.OnClickListener {
@@ -47,17 +48,6 @@ public class MultipartUploadActivity extends AppCompatActivity implements View.O
         btnImagePickerCamera.setOnClickListener(this);
         btnImagePickerGallery.setOnClickListener(this);
         btnMultipartImageUpload.setOnClickListener(this);
-
-        pathList.add(Environment.getExternalStorageDirectory().toString() + "/1.jpg");
-        pathList.add(Environment.getExternalStorageDirectory().toString() + "/2.jpg");
-        pathList.add(Environment.getExternalStorageDirectory().toString() + "/3.jpg");
-        pathList.add(Environment.getExternalStorageDirectory().toString() + "/4.jpg");
-        pathList.add(Environment.getExternalStorageDirectory().toString() + "/5.jpg");
-        nameList.add("1");
-        nameList.add("2");
-        nameList.add("3");
-        nameList.add("4");
-        nameList.add("5");
     }
 
     @Override
@@ -104,7 +94,7 @@ public class MultipartUploadActivity extends AppCompatActivity implements View.O
 
                 FileUploadTaskQueue queue = UploaderManager.getInstance().createQueue();
                 for (int i = 0; i < pathList.size(); i++) {
-                    queue.add(new FileUploadTask(pathList.get(i), nameList.get(i), new UploadCallback() {
+                    FileUploadTask task = new FileUploadTask(pathList.get(i), "file", new UploadCallback() {
                         @Override
                         public void onSuccess(String url) {
                             Log.i("TAG", "MultipartUploadActivity:onSuccess" + url);
@@ -119,7 +109,13 @@ public class MultipartUploadActivity extends AppCompatActivity implements View.O
                         public void onFailure(Exception exc) {
                             Log.i("TAG", "MultipartUploadActivity:onFailure");
                         }
-                    }));
+                    });
+
+                    HashMap<String , String> map = new HashMap<>();
+                    map.put("test", "dddddd");
+                    task.setOtherParameters(map);
+
+                    queue.add(task);
                 }
                 break;
         }

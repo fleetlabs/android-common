@@ -13,37 +13,42 @@ public class FileUploadTask implements Task<FileUploadTask.Callback> {
 
     public interface Callback {
         void onSuccess(String url);
-
         void onFailure();
     }
 
     private String path;
     private String name;
-    private static Map<String, UploadCallback> map = new HashMap<>();
+    private HashMap<String ,String> otherParameters;
+    private UploadCallback uploadCallback;
 
     public FileUploadTask(String path, String name, UploadCallback callback) {
         this.path = path;
         this.name = name;
-        map.put(name, callback);
+        uploadCallback = callback;
+    }
+
+    public void setOtherParameters(HashMap<String, String> otherParameters) {
+        this.otherParameters = otherParameters;
     }
 
     @Override
     public void execute(final Callback callback) {
-        UploaderManager.getInstance().upload(path, name, new UploadCallback() {
+        UploaderManager.getInstance().upload(path, name, otherParameters, new UploadCallback() {
             @Override
             public void onSuccess(String url) {
                 callback.onSuccess(url);
-                map.get(name).onSuccess(url);
+                uploadCallback.onSuccess(url);
             }
 
             @Override
             public void onProgress(double percent) {
-                map.get(name).onProgress(percent);
+                uploadCallback.onProgress(percent);
             }
 
             @Override
             public void onFailure(Exception exc) {
-                map.get(name).onFailure(exc);
+                callback.onFailure();
+                uploadCallback.onFailure(exc);
             }
         });
     }

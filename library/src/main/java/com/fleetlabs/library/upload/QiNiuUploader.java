@@ -36,7 +36,14 @@ public class QiNiuUploader implements Uploader {
     }
 
     @Override
-    public void upload(final String path, final String name, final UploadCallback callback) {
+    public void upload(final String path, final String name, HashMap<String, String> otherParameters, final UploadCallback callback) {
+
+        if (otherParameters != null && otherParameters.containsKey("uptoken")) {
+            String token = otherParameters.get("uptoken");
+            upload2(token, path, name, callback);
+            return;
+        }
+
         new Thread(new Runnable() {
             @Override
             public void run() {

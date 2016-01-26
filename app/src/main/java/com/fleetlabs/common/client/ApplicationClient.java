@@ -21,12 +21,14 @@ public class ApplicationClient extends Application {
         mContext = getApplicationContext();
 
         HashMap<String, String> config = new HashMap<>();
+        config.put("endpoint", "http://192.168.244.67/test.php");
+        /*
         config.put("endpoint", "http://oss-cn-shanghai.aliyuncs.com");
-        config.put("accessKeyId", "LVDUaIkwk9ul7mL7");
-        config.put("accessKeySecret", "l03usWb8e5LG96VXJXQi8PYYoxeLqN");
-        config.put("bucket", "kuitest");
+        config.put("accessKeyId", "jYrAZ23K34PhU1m2");
+        config.put("accessKeySecret", "Z1DnY9ngbSsS4n7NJwHimidMOdi1Wy");
+        config.put("bucket", "yearsii");
         /*config.put("key_url", "http://115.231.183.102:9090/api/simple_upload/with_key_upload_token.php");*/
 
-        UploaderManager.getInstance().initConfig(mContext, OSSType.Ali, config);
+        UploaderManager.getInstance().initConfig(mContext, OSSType.Http, config);
     }
 }
