@@ -10,6 +10,11 @@
         android:layout_height="wrap_content"
         android:id="@+id/evwdEditText"
         />
+    <com.fleetlabs.library.view.EditViewWithDelete
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/evwdEditText2"
+    />
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

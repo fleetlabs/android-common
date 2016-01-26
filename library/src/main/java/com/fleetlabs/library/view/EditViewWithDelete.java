@@ -53,7 +53,7 @@ public class EditViewWithDelete extends EditText implements View.OnFocusChangeLi
 
         mClearDrawable.setBounds(0, 0, mClearDrawable.getIntrinsicWidth(),
                 mClearDrawable.getIntrinsicHeight());
-        setClearIconVisible(true);
+        setClearIconVisible(false);
         setOnFocusChangeListener(this);
         addTextChangedListener(this);
     }
