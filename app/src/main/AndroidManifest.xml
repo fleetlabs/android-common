@@ -21,6 +21,8 @@
         </activity>
         <activity android:name=".activity.MultipartUploadActivity" >
         </activity>
+        <activity android:name=".activity.EditViewWithDeleteActivity">
+        </activity>
     </application>
 
 </manifest>

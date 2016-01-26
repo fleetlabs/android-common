@@ -26,4 +26,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Multipart Upload ACTIVITY" />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnEditViewWithDelete"
+        style="@style/buttonStyle"
+        android:text="Edit View With Delete "
+        />
 </LinearLayout>

@@ -13,6 +13,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button btnAliUpload;
     private Button btnQiNiuUpload;
     private Button btnMultipartUpload;
+    private Button btnEditViewWithDelete;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,9 +22,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnAliUpload = (Button) findViewById(R.id.btnAliUpload);
         btnQiNiuUpload = (Button) findViewById(R.id.btnQiNiuUpload);
         btnMultipartUpload = (Button) findViewById(R.id.btnMultipartUpload);
+        btnEditViewWithDelete = (Button) findViewById(R.id.btnEditViewWithDelete);
         btnAliUpload.setOnClickListener(this);
         btnQiNiuUpload.setOnClickListener(this);
         btnMultipartUpload.setOnClickListener(this);
+        btnEditViewWithDelete.setOnClickListener(this);
 
     }
 
@@ -42,6 +45,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Intent multipartUploadIntent = new Intent(this, MultipartUploadActivity.class);
                 startActivity(multipartUploadIntent);
                 break;
+            case R.id.btnEditViewWithDelete:
+                Intent EditViewWithDeleteIntent = new Intent(this, EditViewWithDeleteActivity.class);
+                startActivity(EditViewWithDeleteIntent);
+                break;
+            default:break;
         }
     }
 }
