@@ -1,7 +1,7 @@
 package com.fleetlabs.library.upload;
 
 import android.content.Context;
-
+/*
 import com.alibaba.sdk.android.oss.ClientConfiguration;
 import com.alibaba.sdk.android.oss.ClientException;
 import com.alibaba.sdk.android.oss.OSS;
@@ -14,7 +14,7 @@ import com.alibaba.sdk.android.oss.common.auth.OSSCredentialProvider;
 import com.alibaba.sdk.android.oss.common.auth.OSSPlainTextAKSKCredentialProvider;
 import com.alibaba.sdk.android.oss.model.PutObjectRequest;
 import com.alibaba.sdk.android.oss.model.PutObjectResult;
-
+*/
 import java.net.URI;
 import java.util.HashMap;
 
@@ -22,13 +22,14 @@ import java.util.HashMap;
  * Created by Aaron.Wu on 2016/1/19.
  */
 public class AliUploader implements Uploader {
-
+    /*
     private OSS oss;
     private String endpoint;
     private String bucket;
-
+    */
     @Override
     public void init(Context context, HashMap<String, String> config) {
+        /*
         endpoint = config.get("endpoint");
         bucket = config.get("bucket");
         OSSCredentialProvider credentialProvider = new OSSPlainTextAKSKCredentialProvider(
@@ -40,11 +41,13 @@ public class AliUploader implements Uploader {
         conf.setMaxErrorRetry(2); // 失败后最大重试次数，默认2次
         OSSLog.enableLog();
         oss = new OSSClient(context, endpoint, credentialProvider, conf);
+        */
     }
 
     @Override
     public void upload(String path, final String name, HashMap<String, String> otherParameters, final UploadCallback callback) {
         // 构造上传请求
+        /*
         if(otherParameters != null && otherParameters.containsKey("bucket")) {
             bucket = otherParameters.get("bucket");
         }
@@ -72,5 +75,6 @@ public class AliUploader implements Uploader {
                 callback.onFailure(e1 == null ? new Exception("上传失败") : e1);
             }
         });
+        */
     }
 }

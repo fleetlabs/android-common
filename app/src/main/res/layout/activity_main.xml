@@ -7,13 +7,6 @@
     tools:context=".MainActivity">
 
     <Button
-        android:id="@+id/btnAliUpload"
-        style="@style/buttonStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="ALI IMAGE UPLOAD ACTIVITY" />
-
-    <Button
         android:id="@+id/btnQiNiuUpload"
         style="@style/buttonStyle"
         android:layout_width="match_parent"

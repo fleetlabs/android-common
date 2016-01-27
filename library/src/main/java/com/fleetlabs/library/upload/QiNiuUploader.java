@@ -2,11 +2,7 @@ package com.fleetlabs.library.upload;
 
 import android.content.Context;
 
-import com.qiniu.android.http.ResponseInfo;
-import com.qiniu.android.storage.UpCompletionHandler;
-import com.qiniu.android.storage.UpProgressHandler;
-import com.qiniu.android.storage.UploadManager;
-import com.qiniu.android.storage.UploadOptions;
+import com.fleetlabs.library.utils.UrlSafeBase64;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -15,9 +11,12 @@ import com.squareup.okhttp.Response;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+
+import javax.crypto.Mac;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 
 /**
  * Created by Aaron.Wu on 2016/1/19.
@@ -25,25 +24,69 @@ import java.util.HashMap;
 public class QiNiuUploader implements Uploader {
 
     private Context mContext;
-    private UploadManager uploadManager;
     private String keyUrl;
+    private String AccessKey;
+    private String SecretKey;
+    private String bucket;
 
     @Override
     public void init(Context context, HashMap<String, String> config) {
         mContext = context;
-        keyUrl = config.get("key_url");
 
+        if (config.containsKey("key_url")) {
+            keyUrl = config.get("key_url");
+        }
+
+        if (config.containsKey("AccessKey")) {
+            AccessKey = config.get("AccessKey");
+        }
+
+        if (config.containsKey("SecretKey")) {
+            SecretKey = config.get("SecretKey");
+        }
+
+        if (config.containsKey("bucket")) {
+            bucket = config.get("bucket");
+        }
     }
 
     @Override
     public void upload(final String path, final String name, HashMap<String, String> otherParameters, final UploadCallback callback) {
-
+        //Use User Token
         if (otherParameters != null && otherParameters.containsKey("uptoken")) {
             String token = otherParameters.get("uptoken");
             upload2(token, path, name, callback);
             return;
         }
 
+        String b = bucket;
+
+        if(otherParameters != null && otherParameters.containsKey("bucket")) {
+            b = otherParameters.get("bucket");
+        }
+
+        // Generate token at client, Not recommend
+        if (AccessKey != null && SecretKey != null) {
+            try {
+                // 1 构造上传策略
+                JSONObject _json = new JSONObject();
+                long _dataline = System.currentTimeMillis() / 1000 + 3600;
+                _json.put("deadline", _dataline);// 有效时间为一个小时
+                _json.put("scope", b);
+                String _encodedPutPolicy = UrlSafeBase64.encodeToString(_json
+                        .toString().getBytes());
+                byte[] _sign = HmacSHA1Encrypt(_encodedPutPolicy, SecretKey);
+                String _encodedSign = UrlSafeBase64.encodeToString(_sign);
+                String _uploadToken = AccessKey + ':' + _encodedSign + ':'
+                        + _encodedPutPolicy;
+                upload2(_uploadToken, path, name, callback);
+                return;
+            } catch (Exception e) {
+                callback.onFailure(e);
+                return;
+            }
+        }
+        // Get Token from Server
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -73,27 +116,33 @@ public class QiNiuUploader implements Uploader {
     }
 
     private void upload2(String uploadToken, String path, String name, final UploadCallback callback) {
-        if (this.uploadManager == null) {
-            this.uploadManager = new UploadManager();
-        }
-        File uploadFile = new File(path);
-        UploadOptions uploadOptions = new UploadOptions(null, null, false, new UpProgressHandler() {
-            @Override
-            public void progress(String key, double percent) {
-                callback.onProgress(percent);
-            }
-        }, null);
 
-        this.uploadManager.put(uploadFile, name, uploadToken,
-                new UpCompletionHandler() {
-                    @Override
-                    public void complete(String key, ResponseInfo respInfo, JSONObject jsonData) {
-                        if (respInfo.isOK()) {
-                            callback.onSuccess(key);
-                        } else {
-                            callback.onFailure(new Exception());
-                        }
-                    }
-                }, uploadOptions);
+        HttpUploader httpUploader = new HttpUploader();
+
+        HashMap<String, String> config = new HashMap<>();
+        config.put("endpoint", "http://upload.qiniu.com/");
+        httpUploader.init(mContext, config);
+
+        HashMap<String, String> otherParameters = new HashMap<>();
+        otherParameters.put("token", uploadToken);
+
+        httpUploader.upload(path, "file", otherParameters, callback);
+    }
+
+    private static byte[] HmacSHA1Encrypt(String encryptText, String encryptKey)
+            throws Exception {
+        String MAC_NAME = "HmacSHA1";
+        String ENCODING = "UTF-8";
+
+        byte[] data = encryptKey.getBytes(ENCODING);
+        // 根据给定的字节数组构造一个密钥,第二参数指定一个密钥算法的名称
+        SecretKey secretKey = new SecretKeySpec(data, MAC_NAME);
+        // 生成一个指定 Mac 算法 的 Mac 对象
+        Mac mac = Mac.getInstance(MAC_NAME);
+        // 用给定密钥初始化 Mac 对象
+        mac.init(secretKey);
+        byte[] text = encryptText.getBytes(ENCODING);
+        // 完成 Mac 操作
+        return mac.doFinal(text);
     }
 }
