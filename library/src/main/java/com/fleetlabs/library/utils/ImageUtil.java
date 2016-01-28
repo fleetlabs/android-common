@@ -19,6 +19,10 @@ public class ImageUtil {
         }
     }
 
+    public static void load(Context mContext, int resId, ImageView view) {
+        Glide.with(mContext).load(resId).into(view);
+    }
+
     public static Bitmap convertBase64ToImage(String string) {
         Bitmap bitmap = null;
         try {
