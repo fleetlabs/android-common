@@ -16,7 +16,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.AliImageUploadActivity" />
         <activity android:name=".activity.QiNiuUploadActivity" >
         </activity>
         <activity android:name=".activity.MultipartUploadActivity" >

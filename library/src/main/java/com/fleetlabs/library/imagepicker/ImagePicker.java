@@ -78,6 +78,7 @@ public class ImagePicker {
                 String path = cursor.getString(column_index);
                 FileUtil.initDir(mActivity.getPackageName());
                 String tempPath = FileUtil.saveImage(path, FileUtil.TEMP_FOLDER);
+                cursor.close();
                 mCallback.onSuccess(tempPath);
                 break;
         }
