@@ -31,7 +31,7 @@ public class FileQueueConsumer implements FileUploadTask.Callback {
     }
 
     @Override
-    public void onSuccess(String url) {
+    public void onSuccess() {
         running = false;
         taskQueue.remove();
         executeNext();

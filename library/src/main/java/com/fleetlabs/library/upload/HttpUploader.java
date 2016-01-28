@@ -7,6 +7,7 @@ import android.os.Looper;
 import com.github.kevinsawicki.http.HttpRequest;
 
 import java.io.File;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -36,7 +37,7 @@ public class HttpUploader implements Uploader {
             public void run() {
 
                 try {
-                    HttpRequest httpRequest = HttpRequest.post(endpoint);
+                    HttpRequest httpRequest = HttpRequest.post(endpoint).useCaches(false).chunk(0);
                     if (otherParameters != null) {
                         Iterator iter = otherParameters.entrySet().iterator();
                         while (iter.hasNext()) {
@@ -50,8 +51,18 @@ public class HttpUploader implements Uploader {
 
                     httpRequest.progress(new HttpRequest.UploadProgress() {
                         @Override
-                        public void onUpload(long uploaded, long total) {
-                            callback.onProgress(uploaded * 100d / total);
+                        public void onUpload(final long uploaded, final long total) {
+                            MAIN_THREAD.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    int percent = (int)(uploaded * 100d / total);
+                                    if (percent >= 100) {
+                                        percent = 99;
+                                    }
+
+                                    callback.onProgress((double)percent);
+                                }
+                            });
                         }
                     }).part(name, new File(path).getName() , new File(path));
 
@@ -61,6 +72,7 @@ public class HttpUploader implements Uploader {
                         MAIN_THREAD.post(new Runnable() {
                             @Override
                             public void run() {
+                                callback.onProgress(100.0);
                                 callback.onSuccess(response);
                             }
                         });
