@@ -27,6 +27,11 @@ public class FileUploadTask implements Task<FileUploadTask.Callback> {
     private TaskStatus taskStatus = TaskStatus.READY;
     private double currentPercent;
 
+    public FileUploadTask(String path, String name) {
+        this.path = path;
+        this.name = name;
+    }
+
     public FileUploadTask(String path, String name, UploadCallback callback) {
         this.path = path;
         this.name = name;
@@ -37,12 +42,24 @@ public class FileUploadTask implements Task<FileUploadTask.Callback> {
         this.otherParameters = otherParameters;
     }
 
+    public void setUploadCallback(UploadCallback uploadCallback) {
+        this.uploadCallback = uploadCallback;
+    }
+
     public TaskStatus getTaskStatus() {
         return taskStatus;
     }
 
     public double getCurrentPercent() {
         return currentPercent;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getPath() {
+        return path;
     }
 
     @Override
@@ -54,20 +71,26 @@ public class FileUploadTask implements Task<FileUploadTask.Callback> {
                 taskStatus = TaskStatus.SUCCESS;
 
                 callback.onSuccess();
-                uploadCallback.onSuccess(url);
+                if(uploadCallback != null) {
+                    uploadCallback.onSuccess(url);
+                }
             }
 
             @Override
             public void onProgress(double percent) {
                 currentPercent = percent;
-                uploadCallback.onProgress(percent);
+                if(uploadCallback != null) {
+                    uploadCallback.onProgress(percent);
+                }
             }
 
             @Override
             public void onFailure(Exception exc) {
                 taskStatus = TaskStatus.FAIL;
                 callback.onFailure();
-                uploadCallback.onFailure(exc);
+                if(uploadCallback != null) {
+                    uploadCallback.onFailure(exc);
+                }
             }
         });
     }
