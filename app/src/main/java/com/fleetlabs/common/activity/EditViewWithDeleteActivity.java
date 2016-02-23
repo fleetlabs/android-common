@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.fleetlabs.common.R;
+import com.fleetlabs.library.view.CountDownTextView;
 import com.fleetlabs.library.view.EditViewWithDelete;
 
 /**
@@ -24,6 +25,16 @@ public class EditViewWithDeleteActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                Log.i("TAG","evwdEditText = " + evwdEditText.getText());
+            }
+        });
+
+        final CountDownTextView textView = (CountDownTextView)findViewById(R.id.countDownTextView);
+        textView.start();
+
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                textView.restart();
             }
         });
     }

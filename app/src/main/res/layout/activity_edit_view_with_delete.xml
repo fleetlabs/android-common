@@ -23,4 +23,13 @@
         android:text="submit"
         />
 
+    <com.fleetlabs.library.view.CountDownTextView
+        android:id="@+id/countDownTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        app:restartTitle="@string/resend"
+        app:waitingTitle="@string/waiting_msg"
+        android:text="@string/send"/>
+
 </LinearLayout>

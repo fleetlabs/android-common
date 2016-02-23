@@ -3,9 +3,14 @@
 
     <attr name="deleteImage" format="integer"/>
 
-
-
     <declare-styleable name="EditViewWithDelete">
         <attr name="deleteImage"/>
+    </declare-styleable>
+
+    <declare-styleable name="CountDownTextView">
+        <attr name="restartTitle" format="reference|string"/>
+        <attr name="waitingTitle" format="reference|string"/>
+        <attr name="millisInFuture" format="integer"/>
+        <attr name="autoStart" format="boolean"/>
     </declare-styleable>
 </resources>
