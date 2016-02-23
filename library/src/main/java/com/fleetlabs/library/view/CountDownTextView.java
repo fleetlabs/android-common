@@ -21,6 +21,8 @@ public class CountDownTextView extends TextView {
     private String defaultTitle;
     private boolean autoStart;
 
+    private TextViewCountDownTimer timer;
+
     public CountDownTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
@@ -56,6 +58,8 @@ public class CountDownTextView extends TextView {
             restartTitle = defaultTitle;
         }
 
+        timer = new TextViewCountDownTimer(millisInFuture, 1000);
+
         if(autoStart) {
             this.start();
         }
@@ -63,6 +67,12 @@ public class CountDownTextView extends TextView {
 
     public void setMillisInFuture(int millisInFuture) {
         this.millisInFuture = millisInFuture;
+        if(timer != null) {
+            timer.cancel();
+            timer = null;
+        }
+
+        timer = new TextViewCountDownTimer(millisInFuture, 1000);
     }
 
     public void start() {
@@ -90,7 +100,18 @@ public class CountDownTextView extends TextView {
         }
     }
 
-    private CountDownTimer timer = new CountDownTimer(millisInFuture, 1000) {
+    private class TextViewCountDownTimer extends CountDownTimer {
+
+        /**
+         * @param millisInFuture    The number of millis in the future from the call
+         *                          to {@link #start()} until the countdown is done and {@link #onFinish()}
+         *                          is called.
+         * @param countDownInterval The interval along the way to receive
+         *                          {@link #onTick(long)} callbacks.
+         */
+        public TextViewCountDownTimer(long millisInFuture, long countDownInterval) {
+            super(millisInFuture, countDownInterval);
+        }
 
         @Override
         public void onTick(long millisUntilFinished) {
