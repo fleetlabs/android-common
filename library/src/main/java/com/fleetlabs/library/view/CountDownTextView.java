@@ -18,6 +18,7 @@ public class CountDownTextView extends TextView {
 
     private String waitingTitle;
     private String restartTitle;
+    private String defaultTitle;
     private boolean autoStart;
 
     public CountDownTextView(Context context, AttributeSet attrs) {
@@ -50,8 +51,9 @@ public class CountDownTextView extends TextView {
         }
         ta.recycle();
 
+        defaultTitle = getText().toString();
         if(StringUtil.isEmpty(restartTitle)) {
-            restartTitle = getText().toString();
+            restartTitle = defaultTitle;
         }
 
         if(autoStart) {
@@ -70,7 +72,13 @@ public class CountDownTextView extends TextView {
 
     public void restart() {
         timer.cancel();
-        timer.start();
+        this.start();
+    }
+
+    public void stop() {
+        timer.cancel();
+        setEnabled(true);
+        setText(defaultTitle);
     }
 
     @Override
