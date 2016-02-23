@@ -32,12 +32,6 @@ import javax.crypto.spec.SecretKeySpec;
  * Created by Aaron.Wu on 2016/1/19.
  */
 public class AliUploader implements Uploader {
-    /*
-    private OSS oss;
-    private String endpoint;
-    private String bucket;
-    */
-
     private String endpoint;
     private String accessKeyId;
     private String accessKeySecret;
@@ -47,30 +41,16 @@ public class AliUploader implements Uploader {
         accessKeyId = config.get("accessKeyId");
         accessKeySecret = config.get("accessKeySecret");
         endpoint = config.get("endpoint");
-
-        /*
-        endpoint = config.get("endpoint");
-        bucket = config.get("bucket");
-        OSSCredentialProvider credentialProvider = new OSSPlainTextAKSKCredentialProvider(
-                config.get("accessKeyId"), config.get("accessKeySecret"));
-        ClientConfiguration conf = new ClientConfiguration();
-        conf.setConnectionTimeout(15 * 1000); // 连接超时，默认15秒
-        conf.setSocketTimeout(15 * 1000); // socket超时，默认15秒
-        conf.setMaxConcurrentRequest(5); // 最大并发请求书，默认5个
-        conf.setMaxErrorRetry(2); // 失败后最大重试次数，默认2次
-        OSSLog.enableLog();
-        oss = new OSSClient(context, endpoint, credentialProvider, conf);
-        */
     }
 
     @Override
     public void upload(String path, final String name, HashMap<String, String> otherParameters, final UploadCallback callback) {
         // 客户端hack
-        String policy = "expiration\":\"2115-01-27T10:56:19Z\",\"conditions\":[[\"content-length-range\", 0, 1048576000]]}";
-        policy = Base64.encodeToString(policy.getBytes(), Base64.DEFAULT);
+        String policy = "{\"expiration\":\"2115-01-27T10:56:19Z\",\"conditions\":[[\"content-length-range\", 0, 1048576000]]}";
+        policy = UrlSafeBase64.encodeToString(policy);
         String signature = "";
         try {
-            signature = Base64.encodeToString(HmacSHA1Encrypt(policy, accessKeySecret), Base64.DEFAULT);
+            signature = UrlSafeBase64.encodeToString(HmacSHA1Encrypt(policy, accessKeySecret));
         } catch (Exception e) {
             if (callback != null) {
                 callback.onFailure(e);
@@ -88,44 +68,12 @@ public class AliUploader implements Uploader {
 
         otherParameters = new HashMap<>();
         otherParameters.put("OSSAccessKeyId", accessKeyId);
-        //otherParameters.put("policy", policy);
-        otherParameters.put("key", "upload/"+name);
-        //otherParameters.put("Signature", signature);
+        otherParameters.put("policy", policy);
+        otherParameters.put("key", name);
+        otherParameters.put("Signature", signature);
         otherParameters.put("success_action_status", "200");
 
         httpUploader.upload(path, "file", otherParameters, callback);
-
-
-        // 构造上传请求
-        /*
-        if(otherParameters != null && otherParameters.containsKey("bucket")) {
-            bucket = otherParameters.get("bucket");
-        }
-
-        PutObjectRequest put = new PutObjectRequest(bucket, name, path);
-
-        // 异步上传时可以设置进度回调
-        put.setProgressCallback(new OSSProgressCallback<PutObjectRequest>() {
-
-            @Override
-            public void onProgress(PutObjectRequest putObjectRequest, long l, long l1) {
-                callback.onProgress(l * 100d / l1);
-            }
-        });
-
-        oss.asyncPutObject(put, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
-
-            @Override
-            public void onSuccess(PutObjectRequest putObjectRequest, PutObjectResult putObjectResult) {
-                callback.onSuccess("http://" + bucket + "." + URI.create(endpoint).getHost() + "/" + name);
-            }
-
-            @Override
-            public void onFailure(PutObjectRequest putObjectRequest, ClientException e, ServiceException e1) {
-                callback.onFailure(e1 == null ? new Exception("上传失败") : e1);
-            }
-        });
-        */
     }
 
     private static byte[] HmacSHA1Encrypt(String encryptText, String encryptKey)
