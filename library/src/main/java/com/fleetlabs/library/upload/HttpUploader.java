@@ -7,7 +7,6 @@ import android.os.Looper;
 import com.github.kevinsawicki.http.HttpRequest;
 
 import java.io.File;
-import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -49,22 +48,22 @@ public class HttpUploader implements Uploader {
                         }
                     }
 
-                    httpRequest.progress(new HttpRequest.UploadProgress() {
+                    HttpRequest part = httpRequest.progress(new HttpRequest.UploadProgress() {
                         @Override
                         public void onUpload(final long uploaded, final long total) {
                             MAIN_THREAD.post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    int percent = (int)(uploaded * 100d / total);
+                                    int percent = (int) (uploaded * 100d / total);
                                     if (percent >= 100) {
                                         percent = 99;
                                     }
 
-                                    callback.onProgress((double)percent);
+                                    callback.onProgress((double) percent);
                                 }
                             });
                         }
-                    }).part(name, new File(path).getName() , new File(path));
+                    }).part(name, new File(path).getName(), new File(path));
 
                     if (httpRequest.ok()) {
                         final String response = httpRequest.body();
