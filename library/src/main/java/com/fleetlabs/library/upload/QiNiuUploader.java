@@ -55,13 +55,17 @@ public class QiNiuUploader implements Uploader {
         //Use User Token
         if (otherParameters != null && otherParameters.containsKey("uptoken")) {
             String token = otherParameters.get("uptoken");
+            if (otherParameters.containsKey("key")) {
+                String key = otherParameters.get("key");
+                upload3(key, token, path, name, callback);
+            }
             upload2(token, path, name, callback);
             return;
         }
 
         String b = bucket;
 
-        if(otherParameters != null && otherParameters.containsKey("bucket")) {
+        if (otherParameters != null && otherParameters.containsKey("bucket")) {
             b = otherParameters.get("bucket");
         }
 
@@ -125,6 +129,21 @@ public class QiNiuUploader implements Uploader {
 
         HashMap<String, String> otherParameters = new HashMap<>();
         otherParameters.put("token", uploadToken);
+
+        httpUploader.upload(path, name, otherParameters, callback);
+    }
+
+    private void upload3(String key, String uploadToken, String path, String name, final UploadCallback callback) {
+
+        HttpUploader httpUploader = new HttpUploader();
+
+        HashMap<String, String> config = new HashMap<>();
+        config.put("endpoint", "http://upload.qiniu.com/");
+        httpUploader.init(mContext, config);
+
+        HashMap<String, String> otherParameters = new HashMap<>();
+        otherParameters.put("token", uploadToken);
+        otherParameters.put("key", key);
 
         httpUploader.upload(path, name, otherParameters, callback);
     }
