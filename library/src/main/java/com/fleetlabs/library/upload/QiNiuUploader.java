@@ -23,6 +23,9 @@ import javax.crypto.spec.SecretKeySpec;
  */
 public class QiNiuUploader implements Uploader {
 
+    public static final String TOKEN_PARAM = "token";
+    public static final String KEY_PARAM = "key";
+
     private Context mContext;
     private String keyUrl;
     private String AccessKey;
@@ -53,13 +56,8 @@ public class QiNiuUploader implements Uploader {
     @Override
     public void upload(final String path, final String name, HashMap<String, String> otherParameters, final UploadCallback callback) {
         //Use User Token
-        if (otherParameters != null && otherParameters.containsKey("uptoken")) {
-            String token = otherParameters.get("uptoken");
-            if (otherParameters.containsKey("key")) {
-                String key = otherParameters.get("key");
-                upload3(key, token, path, name, callback);
-            }
-            upload2(token, path, name, callback);
+        if (otherParameters != null && otherParameters.containsKey(TOKEN_PARAM)) {
+            upload2(otherParameters, path, name, callback);
             return;
         }
 
@@ -83,7 +81,9 @@ public class QiNiuUploader implements Uploader {
                 String _encodedSign = UrlSafeBase64.encodeToString(_sign);
                 String _uploadToken = AccessKey + ':' + _encodedSign + ':'
                         + _encodedPutPolicy;
-                upload2(_uploadToken, path, name, callback);
+                HashMap<String, String> config = new HashMap<>();
+                config.put(TOKEN_PARAM, _uploadToken);
+                upload2(config, path, name, callback);
                 return;
             } catch (Exception e) {
                 callback.onFailure(e);
@@ -108,7 +108,9 @@ public class QiNiuUploader implements Uploader {
                         String uploadToken = response.body().string();
                         try {
                             String token = new JSONObject(uploadToken).get("uptoken").toString();
-                            upload2(token, path, name, callback);
+                            HashMap<String, String> config = new HashMap<>();
+                            config.put(TOKEN_PARAM, token);
+                            upload2(config, path, name, callback);
                         } catch (JSONException e) {
                             callback.onFailure(new Exception("授权获取失败"));
                             e.printStackTrace();
@@ -119,31 +121,13 @@ public class QiNiuUploader implements Uploader {
         }).start();
     }
 
-    private void upload2(String uploadToken, String path, String name, final UploadCallback callback) {
+    private void upload2(HashMap<String, String> otherParameters, String path, String name, final UploadCallback callback) {
 
         HttpUploader httpUploader = new HttpUploader();
 
         HashMap<String, String> config = new HashMap<>();
         config.put("endpoint", "http://upload.qiniu.com/");
         httpUploader.init(mContext, config);
-
-        HashMap<String, String> otherParameters = new HashMap<>();
-        otherParameters.put("token", uploadToken);
-
-        httpUploader.upload(path, name, otherParameters, callback);
-    }
-
-    private void upload3(String key, String uploadToken, String path, String name, final UploadCallback callback) {
-
-        HttpUploader httpUploader = new HttpUploader();
-
-        HashMap<String, String> config = new HashMap<>();
-        config.put("endpoint", "http://upload.qiniu.com/");
-        httpUploader.init(mContext, config);
-
-        HashMap<String, String> otherParameters = new HashMap<>();
-        otherParameters.put("token", uploadToken);
-        otherParameters.put("key", key);
 
         httpUploader.upload(path, name, otherParameters, callback);
     }

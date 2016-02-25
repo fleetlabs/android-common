@@ -48,7 +48,7 @@ public class HttpUploader implements Uploader {
                         }
                     }
 
-                    HttpRequest part = httpRequest.progress(new HttpRequest.UploadProgress() {
+                    httpRequest.progress(new HttpRequest.UploadProgress() {
                         @Override
                         public void onUpload(final long uploaded, final long total) {
                             MAIN_THREAD.post(new Runnable() {
