@@ -20,6 +20,7 @@ public class EditViewWithDelete extends EditText implements View.OnFocusChangeLi
     private Drawable mClearDrawable;
     private boolean hasFoucs;
     private Drawable deleteImage;
+    private OnFocusListener onFocusListener;
 
     public EditViewWithDelete(Context context) {
         this(context, null);
@@ -83,6 +84,9 @@ public class EditViewWithDelete extends EditText implements View.OnFocusChangeLi
         this.hasFoucs = hasFocus;
         if (hasFocus) {
             setClearIconVisible(getText().length() > 0);
+            if(onFocusListener != null) {
+                onFocusListener.onFocus();
+            }
         } else {
             setClearIconVisible(false);
         }
@@ -109,5 +113,11 @@ public class EditViewWithDelete extends EditText implements View.OnFocusChangeLi
     @Override
     public void afterTextChanged(Editable s) {
     }
+    public void setOnFocusListtener(OnFocusListener onFocusListener){
+        this.onFocusListener = onFocusListener;
+    }
 
+    public interface OnFocusListener{
+        void onFocus();
+    }
 }
