@@ -126,7 +126,7 @@ public class QiNiuUploader implements Uploader {
         HashMap<String, String> otherParameters = new HashMap<>();
         otherParameters.put("token", uploadToken);
 
-        httpUploader.upload(path, "file", otherParameters, callback);
+        httpUploader.upload(path, name, otherParameters, callback);
     }
 
     private static byte[] HmacSHA1Encrypt(String encryptText, String encryptKey)
