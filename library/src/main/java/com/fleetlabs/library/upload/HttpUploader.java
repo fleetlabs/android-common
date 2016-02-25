@@ -63,7 +63,7 @@ public class HttpUploader implements Uploader {
                                 }
                             });
                         }
-                    }).part(name, new File(path).getName(), new File(path));
+                    }).part("file", name, new File(path));
 
                     if (httpRequest.ok()) {
                         final String response = httpRequest.body();
