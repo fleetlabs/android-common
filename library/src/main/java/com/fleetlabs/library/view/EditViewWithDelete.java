@@ -128,7 +128,7 @@ public class EditViewWithDelete extends EditText implements View.OnFocusChangeLi
     }
 
     public void setOnTextChangedListener(OnTextChangedListener onTextChangedListener){
-
+        this.onTextChangedListener = onTextChangedListener;
     }
 
 
