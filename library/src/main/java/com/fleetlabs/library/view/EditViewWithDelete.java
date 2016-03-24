@@ -21,6 +21,7 @@ public class EditViewWithDelete extends EditText implements View.OnFocusChangeLi
     private boolean hasFoucs;
     private Drawable deleteImage;
     private OnFocusListener onFocusListener;
+    private OnTextChangedListener onTextChangedListener;
 
     public EditViewWithDelete(Context context) {
         this(context, null);
@@ -84,11 +85,13 @@ public class EditViewWithDelete extends EditText implements View.OnFocusChangeLi
         this.hasFoucs = hasFocus;
         if (hasFocus) {
             setClearIconVisible(getText().length() > 0);
-            if(onFocusListener != null) {
-                onFocusListener.onFocus();
-            }
+
         } else {
             setClearIconVisible(false);
+        }
+
+        if(onFocusListener != null) {
+            onFocusListener.onFocus(hasFocus);
         }
     }
 
@@ -103,21 +106,42 @@ public class EditViewWithDelete extends EditText implements View.OnFocusChangeLi
         if (hasFoucs) {
             setClearIconVisible(s.length() > 0);
         }
+        if(onTextChangedListener != null) {
+            onTextChangedListener.onTextChanged(s, start, count, after);
+        }
     }
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count,
                                   int after) {
+        if(onTextChangedListener != null) {
+            onTextChangedListener.beforeTextChanged(s, start, count, after);
+        }
     }
 
     @Override
     public void afterTextChanged(Editable s) {
+        if(onTextChangedListener != null) {
+            onTextChangedListener.afterTextChanged(s);
+        }
     }
     public void setOnFocusListtener(OnFocusListener onFocusListener){
         this.onFocusListener = onFocusListener;
     }
 
+    public void setOnTextChangedListener(OnTextChangedListener onTextChangedListener){
+        this.onTextChangedListener = onTextChangedListener;
+    }
+
+
     public interface OnFocusListener{
-        void onFocus();
+        void onFocus(boolean b);
+    }
+
+    public interface OnTextChangedListener{
+        void onTextChanged(CharSequence s, int start, int count, int after);
+        void beforeTextChanged(CharSequence s, int start, int count,
+                               int after);
+        void afterTextChanged(Editable s);
     }
 }
