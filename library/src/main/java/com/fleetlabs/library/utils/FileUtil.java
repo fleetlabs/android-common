@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
+import android.media.ImageWriter;
 import android.os.Environment;
 import android.util.Log;
 
@@ -74,6 +75,12 @@ public class FileUtil {
         return realPathString;
     }
 
+    public static String saveImage(String imageTempPath, String imagePath, int screen) {
+        ScreenHeight = screen;
+        ScreenWidth = screen;
+        return saveImage(imageTempPath, imagePath);
+    }
+
     public static String saveImage(String imageTempPath, String imagePath) {
         String result = "";
         try {
@@ -89,8 +96,7 @@ public class FileUtil {
             int screenWidth = ScreenWidth;
             int screenHeight = ScreenHeight;
 
-            opt.inSampleSize = computeSampleSize(opt, ScreenWidth > ScreenHeight ? ScreenHeight : ScreenWidth, ScreenWidth*ScreenHeight);
-            /*
+            opt.inSampleSize = computeSampleSize(opt, ScreenWidth > ScreenHeight ? ScreenHeight : ScreenWidth, ScreenWidth * ScreenHeight);
             if (picWidth > picHeight) {
                 if (picWidth > screenWidth)
                     opt.inSampleSize = (picWidth / screenWidth + 1) * 2;
@@ -98,21 +104,18 @@ public class FileUtil {
                 if (picHeight > screenHeight)
                     opt.inSampleSize = (picHeight / screenHeight + 1) * 2;
             }
-            */
             opt.inJustDecodeBounds = false;
             Bitmap bm = BitmapFactory.decodeFile(imageTempPath, opt);
 
+            ImageWriter imageWriter;
             int angle = readPictureDegree(imageTempPath);
 
             Matrix matrix = new Matrix();
             matrix.postRotate(angle);
             Log.e(TAG, "angle2=" + angle);
-            if(angle == 0)
-            {
+            if (angle == 0) {
                 result = savePhotoToSDCard(bm, imagePath, String.valueOf(System.currentTimeMillis()));
-            }
-            else
-            {
+            } else {
                 Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), matrix, true);
                 result = savePhotoToSDCard(resizedBitmap, imagePath, String.valueOf(System.currentTimeMillis()));
             }
@@ -195,8 +198,8 @@ public class FileUtil {
         return pathString;
     }
 
-    public static int computeSampleSize(BitmapFactory.Options options,int minSideLength, int maxNumOfPixels) {
-        int initialSize = computeInitialSampleSize(options, minSideLength,maxNumOfPixels);
+    public static int computeSampleSize(BitmapFactory.Options options, int minSideLength, int maxNumOfPixels) {
+        int initialSize = computeInitialSampleSize(options, minSideLength, maxNumOfPixels);
         int roundedSize;
         if (initialSize <= 8) {
             roundedSize = 1;
@@ -210,7 +213,7 @@ public class FileUtil {
         return roundedSize;
     }
 
-    private static int computeInitialSampleSize(BitmapFactory.Options options,int minSideLength, int maxNumOfPixels) {
+    private static int computeInitialSampleSize(BitmapFactory.Options options, int minSideLength, int maxNumOfPixels) {
         //原始图片的宽
         double w = options.outWidth;
         //原始图片的高
