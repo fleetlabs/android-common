@@ -146,11 +146,13 @@ public class QiNiuUploader implements Uploader {
                 String _uploadToken = AccessKey + ':' + _encodedSign + ':'
                         + _encodedPutPolicy;
                 HashMap<String, String> config = new HashMap<>();
-                config.put(TOKEN_PARAM, _uploadToken);
-
                 config.put("endpoint", "http://upload.qiniu.com/");
                 httpUploader.init(mContext, config);
 
+                if (otherParameters == null) {
+                    otherParameters = new HashMap<>();
+                }
+                otherParameters.put(TOKEN_PARAM, _uploadToken);
                 return httpUploader.upload(path, name, otherParameters);
             } catch (Exception e) {
                 e.printStackTrace();
