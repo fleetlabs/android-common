@@ -121,6 +121,44 @@ public class QiNiuUploader implements Uploader {
         }).start();
     }
 
+    @Override
+    public String upload(String path, String name, HashMap<String, String> otherParameters) {
+        HttpUploader httpUploader = new HttpUploader();
+
+        //Use User Token
+        if (otherParameters != null && otherParameters.containsKey(TOKEN_PARAM)) {
+            HashMap<String, String> config = new HashMap<>();
+            config.put("endpoint", "http://upload.qiniu.com/");
+            httpUploader.init(mContext, config);
+
+            return httpUploader.upload(path, name, otherParameters);
+        } else {
+            try {
+                // 1 构造上传策略
+                JSONObject _json = new JSONObject();
+                long _dataline = System.currentTimeMillis() / 1000 + 3600;
+                _json.put("deadline", _dataline);// 有效时间为一个小时
+                _json.put("scope", bucket);
+                String _encodedPutPolicy = UrlSafeBase64.encodeToString(_json
+                        .toString().getBytes());
+                byte[] _sign = HmacSHA1Encrypt(_encodedPutPolicy, SecretKey);
+                String _encodedSign = UrlSafeBase64.encodeToString(_sign);
+                String _uploadToken = AccessKey + ':' + _encodedSign + ':'
+                        + _encodedPutPolicy;
+                HashMap<String, String> config = new HashMap<>();
+                config.put(TOKEN_PARAM, _uploadToken);
+
+                config.put("endpoint", "http://upload.qiniu.com/");
+                httpUploader.init(mContext, config);
+
+                return httpUploader.upload(path, name, otherParameters);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+    }
+
     private void upload2(HashMap<String, String> otherParameters, String path, String name, final UploadCallback callback) {
 
         HttpUploader httpUploader = new HttpUploader();

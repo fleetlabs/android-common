@@ -10,4 +10,5 @@ import java.util.HashMap;
 public interface Uploader {
     void init(Context context, HashMap<String, String> config);
     void upload(String path, String name, HashMap<String, String> otherParameters, UploadCallback callback);
+    String upload(String path, String name, HashMap<String, String> otherParameters);
 }

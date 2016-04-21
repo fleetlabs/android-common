@@ -53,6 +53,14 @@ public class UploaderManager {
         uploader.upload(path, name, null, callback);
     }
 
+    public String upload(String path, String name, HashMap<String, String> otherParameters) {
+        return uploader.upload(path, name, otherParameters);
+    }
+
+    public String upload(String path, String name) {
+        return uploader.upload(path, name, null);
+    }
+
     public FileUploadTaskQueue createQueue() {
         FileUploadTaskQueue queue = FileUploadTaskQueue.create(mContext);
         return queue;

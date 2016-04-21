@@ -94,4 +94,26 @@ public class HttpUploader implements Uploader {
             }
         }).start();
     }
+
+    @Override
+    public String upload(String path, String name, HashMap<String, String> otherParameters) {
+        try {
+            HttpRequest httpRequest = HttpRequest.post(endpoint).part("file", name, new File(path));;
+            if (otherParameters != null) {
+                Iterator iter = otherParameters.entrySet().iterator();
+                while (iter.hasNext()) {
+                    Map.Entry entry = (Map.Entry) iter.next();
+                    String key = entry.getKey().toString();
+                    String val = entry.getValue().toString();
+
+                    httpRequest.part(key, val);
+                }
+            }
+
+            return httpRequest.body();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

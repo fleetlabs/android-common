@@ -76,6 +76,11 @@ public class AliUploader implements Uploader {
         httpUploader.upload(path, "file", otherParameters, callback);
     }
 
+    @Override
+    public String upload(String path, String name, HashMap<String, String> otherParameters) {
+        return null;
+    }
+
     private static byte[] HmacSHA1Encrypt(String encryptText, String encryptKey)
             throws Exception {
         String MAC_NAME = "HmacSHA1";
