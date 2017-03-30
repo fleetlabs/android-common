@@ -3,8 +3,6 @@ package com.fleetlabs.library.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import org.androidannotations.api.sharedpreferences.SharedPreferencesCompat;
-
 /**
  * Created by Aaron.Wu on 2015/9/10.
  */
@@ -68,8 +66,7 @@ public class SPUtil {
     public static void remove(Context context, String spName, String key) {
         SharedPreferences sp = context.getSharedPreferences(spName, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
-        editor.remove(key);
-        SharedPreferencesCompat.apply(editor);
+        editor.remove(key).commit();
     }
 
     /**
